@@ -1,18 +1,16 @@
-# HW1 private repository template source
+# MLSD 2026 — ваш репозиторий домашних работ
 
-Этот README — точный минимальный исходник отдельного public GitHub template.
-В нём нет решения, Dockerfile, lockfile, checker package, credentials или
-course-wide files. Текущий статус template указан в
-[`template-delivery.json`](https://github.com/fall-out-bug/mlsd-2026/blob/main/assignments/HW1/v1/template-delivery.json): пока там
-`draft_unresolved`, actual link и неавторский pilot остаются `NOT_ASSESSED`.
+Создайте из этого шаблона новый **приватный репозиторий** через GitHub
+`Use this template`, клонируйте его и работайте в ветке `main`.
+Не используйте fork или копирование репозитория курса.
 
-После появления `verified` metadata создайте **новый private repository** только
-через GitHub `Use this template`; не используйте fork, folder copy или course
-checkout. Работайте в его ветке `main`, добавьте собственные `Dockerfile`,
-deterministic dependency lock, `README.md` с командами `docker build`/
-`docker run` и реализацию `GET /health`.
+Начните с [инструкции HW1](https://github.com/fall-out-bug/mlsd-2026/blob/3ca5ce2e488e92a4cee34c1cb22a2eb2778eb6f8/assignments/HW1/v1/README.md).
+Она закреплена на конкретной версии: содержит требования, подготовку окружения,
+маркер коммита, команду самопроверки и порядок отправки.
 
-Затем следуйте [HW1 instructions](https://github.com/fall-out-bug/mlsd-2026/blob/main/assignments/HW1/v1/README.md):
-marker commit, local mini-checker и `git push origin main` выполняются именно из
-вашего private repository. Local `PASS` не является server receipt, grade,
-human review или course release.
+Здесь намеренно нет готового решения. Добавьте свои `Dockerfile`, файл
+закреплённых зависимостей и сервис с `GET /health`; замените этот README
+описанием решения и командами `docker build` и `docker run`.
+
+Материалы пока предназначены для пилота. Локальный `PASS` и успешный push в
+GitHub не подтверждают зарегистрированную сдачу или оценку в системе курса.
