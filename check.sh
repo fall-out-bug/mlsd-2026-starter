@@ -1,5 +1,5 @@
 #!/bin/sh
-# Local feedback for HW1. Run from the root of a student repository:
+# Локальная проверка HW1. Запуск из корня студенческого репозитория:
 #   sh ./check.sh
 set -eu
 
@@ -31,7 +31,7 @@ finish() {
     status=$?
     trap - 0 HUP INT TERM
     if ! cleanup_owned; then
-        printf '%s\n' "FAIL: cleanup of HW1-owned Docker resources failed" >&2
+        printf '%s\n' "FAIL: не удалось очистить Docker-ресурсы, созданные проверкой HW1" >&2
         exit 1
     fi
     exit "$status"
@@ -171,7 +171,7 @@ END {
 trap finish 0
 trap 'exit 1' HUP INT TERM
 
-[ -f Dockerfile ] || fail "Dockerfile is missing"
+[ -f Dockerfile ] || fail "отсутствует файл Dockerfile: создайте его по разделу требований задания"
 
 lockfile=""
 for candidate in uv.lock poetry.lock Pipfile.lock requirements.lock package-lock.json npm-shrinkwrap.json pnpm-lock.yaml yarn.lock Cargo.lock go.sum; do
@@ -180,14 +180,14 @@ for candidate in uv.lock poetry.lock Pipfile.lock requirements.lock package-lock
         break
     fi
 done
-[ -n "$lockfile" ] || fail "a deterministic dependency lockfile is missing"
+[ -n "$lockfile" ] || fail "отсутствует файл закреплённых зависимостей: создайте один из файлов, перечисленных в требованиях задания"
 
-[ -f README.md ] || fail "README.md is missing"
-grep -Eiq '^[[:space:]]*docker[[:space:]]+build.*[[:space:]]\.[[:space:]]*$' README.md || fail "README.md must document docker build from ."
-grep -Eiq '^[[:space:]]*docker[[:space:]]+run.*8080' README.md || fail "README.md must document docker run exposing port 8080"
+[ -f README.md ] || fail "отсутствует файл README.md: создайте его с командами сборки и запуска"
+grep -Eiq '^[[:space:]]*docker[[:space:]]+build.*[[:space:]]\.[[:space:]]*$' README.md || fail "README.md должен содержать команду docker build с контекстом ."
+grep -Eiq '^[[:space:]]*docker[[:space:]]+run.*8080' README.md || fail "README.md должен содержать команду docker run с портом 8080"
 
 from_lines=$(grep -Ei '^[[:space:]]*from[[:space:]]+' Dockerfile || true)
-[ -n "$from_lines" ] || fail "Dockerfile has no FROM instruction"
+[ -n "$from_lines" ] || fail "в Dockerfile нет инструкции FROM"
 while IFS= read -r from_line; do
     set -- $from_line
     shift
@@ -199,29 +199,29 @@ while IFS= read -r from_line; do
         scratch) ;;
         *@sha256:*)
             digest=${base_image##*@sha256:}
-            printf '%s' "$digest" | grep -Eq '^[0-9A-Fa-f]{64}$' || fail "Dockerfile FROM must pin a sha256 digest"
+            printf '%s' "$digest" | grep -Eq '^[0-9A-Fa-f]{64}$' || fail "в Dockerfile каждый FROM должен указывать образ с sha256 digest"
             ;;
-        *) fail "Dockerfile FROM must pin a sha256 digest" ;;
+        *) fail "в Dockerfile каждый FROM должен указывать образ с sha256 digest" ;;
     esac
 done <<EOF
 $from_lines
 EOF
 
-command -v docker >/dev/null 2>&1 || fail "docker CLI is not installed"
-command -v curl >/dev/null 2>&1 || fail "curl is not installed"
-command -v timeout >/dev/null 2>&1 || fail "timeout is not installed"
-timeout 30 docker info >/dev/null 2>&1 || fail "Docker daemon is unavailable"
+command -v docker >/dev/null 2>&1 || fail "не установлена утилита docker: установите Docker и повторите проверку"
+command -v curl >/dev/null 2>&1 || fail "не установлена утилита curl: установите curl и повторите проверку"
+command -v timeout >/dev/null 2>&1 || fail "не установлена утилита timeout: установите GNU timeout и повторите проверку"
+timeout 30 docker info >/dev/null 2>&1 || fail "демон Docker недоступен: запустите Docker и проверьте командой docker version"
 
-printf '%s\n' "Building local HW1 image..."
-timeout 600 docker build --label "$label" --tag "$image" . || fail "docker build failed"
-container=$(timeout 30 docker run --detach --label "$label" --publish 127.0.0.1::8080 "$image") || fail "docker run failed"
-address=$(timeout 30 docker port "$container" 8080/tcp) || fail "Docker did not publish port 8080"
+printf '%s\n' "Сборка локального образа HW1..."
+timeout 600 docker build --label "$label" --tag "$image" . || fail "ошибка docker build"
+container=$(timeout 30 docker run --detach --label "$label" --publish 127.0.0.1::8080 "$image") || fail "ошибка docker run"
+address=$(timeout 30 docker port "$container" 8080/tcp) || fail "Docker не опубликовал порт 8080: проверьте, что сервис слушает порт 8080 внутри контейнера"
 host_port=${address##*:}
-[ -n "$host_port" ] || fail "Docker did not report a host port"
+[ -n "$host_port" ] || fail "Docker не сообщил порт на хосте: повторите проверку"
 
-response=$(timeout 2 curl --fail --silent --show-error --max-time 2 --retry 10 --retry-all-errors --retry-delay 0 --retry-max-time 2 --max-filesize 65536 "http://127.0.0.1:${host_port}/health") || fail "GET /health did not return HTTP 200 within two seconds"
-printf '%s' "$response" | json_status_ok || fail "GET /health must return a top-level JSON object with status ok"
+response=$(timeout 2 curl --fail --silent --show-error --max-time 2 --retry 10 --retry-all-errors --retry-delay 0 --retry-max-time 2 --max-filesize 65536 "http://127.0.0.1:${host_port}/health") || fail "GET /health не вернул HTTP 200 за две секунды: проверьте, что контейнер запущен и отвечает по адресу /health"
+printf '%s' "$response" | json_status_ok || fail "GET /health должен вернуть JSON-объект верхнего уровня с полем status ok: проверьте формат ответа"
 
 trap - 0 HUP INT TERM
-cleanup_owned || fail "cleanup of HW1-owned Docker resources failed"
-printf '%s\n' "PASS: local HW1 container contract"
+cleanup_owned || fail "не удалось очистить Docker-ресурсы, созданные проверкой HW1: удалите контейнеры и образы с меткой mlsd-hw1 вручную"
+printf '%s\n' "PASS: локальная проверка контейнера HW1 прошла"
