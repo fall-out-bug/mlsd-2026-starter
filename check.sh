@@ -183,6 +183,9 @@ done
 [ -n "$lockfile" ] || fail "отсутствует файл закреплённых зависимостей: создайте один из файлов, перечисленных в требованиях задания"
 
 [ -f README.md ] || fail "отсутствует файл README.md: создайте его с командами сборки и запуска"
+if head -n 20 Dockerfile | grep -Eq '^[[:space:]]*#[[:space:]]*syntax[[:space:]]*=' ; then
+    fail "уберите строку '# syntax=...': серверная проверка собирает со встроенным frontend и не загружает внешние frontend-образы"
+fi
 grep -Eiq '^[[:space:]]*docker[[:space:]]+build.*[[:space:]]\.[[:space:]]*$' README.md || fail "README.md должен содержать команду docker build с контекстом ."
 grep -Eiq '^[[:space:]]*docker[[:space:]]+run.*8080' README.md || fail "README.md должен содержать команду docker run с портом 8080"
 
