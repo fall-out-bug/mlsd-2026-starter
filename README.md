@@ -27,12 +27,6 @@ docker version
 Engine или Docker Desktop** 24+ под WSL2/Linux. Сам `uv` попадает в
 образ отдельной строкой `FROM` — закрепите и её дайджестом:
 
-```dockerfile
-FROM ghcr.io/astral-sh/uv@sha256:<дайджест>
-FROM python:3.12-slim@sha256:<дайджест>
-COPY --from=0 /uv /usr/local/bin/
-```
-
 ## Что должно быть в репозитории
 
 Добавьте в корень репозитория:
