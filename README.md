@@ -30,7 +30,7 @@ Engine или Docker Desktop** 24+ под WSL2/Linux. Сам `uv` попадае
 ```dockerfile
 FROM ghcr.io/astral-sh/uv:latest@sha256:<дайджест>
 FROM python:3.12-slim@sha256:<дайджест>
-COPY --from=0 /uv /uvx /usr/local/bin/
+COPY --from=0 /uv /usr/local/bin/
 ```
 
 ## Что должно быть в репозитории
