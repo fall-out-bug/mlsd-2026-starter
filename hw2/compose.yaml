@@ -1,0 +1,38 @@
+services:
+  minio:
+    build: ./minio
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: hw2-local
+      MINIO_ROOT_PASSWORD: hw2-local-only
+    mem_limit: 512m
+  redis:
+    image: redis:7.4.2-alpine@sha256:02419de7eddf55aa5bcf49efb74e88fa8d931b4d77c07eff8a6b2144472b6952
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  pipeline:
+    build:
+      context: .
+      args:
+        STUDENT_UID: "${LOCAL_UID:-1000}"
+        STUDENT_GID: "${LOCAL_GID:-1000}"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    mem_limit: 4g
+    cpus: 2
+    environment:
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: hw2-local
+      S3_SECRET_KEY: hw2-local-only
+      REDIS_HOST: redis
+    volumes:
+      - .:/workspace
+    depends_on:
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    command: ["python", "run.py"]
