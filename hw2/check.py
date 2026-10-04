@@ -65,14 +65,14 @@ def inspect_outputs(expected):
     client = storage()
     objects = client.list_objects_v2(Bucket=BUCKET, Prefix="features/").get("Contents", [])
     if not objects or any(not item["Key"].endswith(".parquet") for item in objects):
-        raise ValueError("MinIO: ожидаются файлы Parquet в features/")
+        raise ValueError("S3: ожидаются файлы Parquet в features/")
     with tempfile.TemporaryDirectory() as temporary:
         for index, item in enumerate(objects):
             client.download_file(BUCKET, item["Key"], str(Path(temporary) / f"part-{index}.parquet"))
-        require_equal(parquet_features(temporary), expected, "Parquet в MinIO")
+        require_equal(parquet_features(temporary), expected, "Parquet в S3")
     source = client.get_object(Bucket=BUCKET, Key="input/sample.csv")["Body"].read()
     if hashlib.sha256(source).hexdigest() != hashlib.sha256((ROOT / "data/sample.csv").read_bytes()).hexdigest():
-        raise ValueError("MinIO: входной файл отличается от среза")
+        raise ValueError("S3: входной файл отличается от среза")
     store = redis.Redis(host=os.environ["REDIS_HOST"], decode_responses=True)
     actual = {key[len(PREFIX):]: json.loads(store.get(key)) for key in store.scan_iter(PREFIX + "*")}
     require_equal(actual, expected, "Redis")
@@ -92,7 +92,7 @@ def main():
         print(f"PASS: запуск {attempt + 1}, Parquet и Redis, клиентов {len(actual)}", flush=True)
     receipt = {"status": "PASS", "runs": 2, "customers": len(expected),
                "input_sha256": hashlib.sha256((ROOT / "data/sample.csv").read_bytes()).hexdigest(),
-               "parquet_minio_redis_verified": True}
+               "parquet_s3_redis_verified": True}
     (ROOT / "output/check-result.json").write_text(json.dumps(receipt, indent=2) + "\n")
 
 
