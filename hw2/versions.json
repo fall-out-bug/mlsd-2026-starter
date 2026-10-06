@@ -1,0 +1,39 @@
+{
+  "schema_version": "hw2-project-v2",
+  "dag_id": "online_retail_features",
+  "tasks": [
+    "get_dataset",
+    "put_dataset",
+    "features_engineering",
+    "load_features"
+  ],
+  "services": [
+    "airflow-init",
+    "airflow-webserver",
+    "airflow-scheduler",
+    "postgres",
+    "seaweedfs",
+    "redis",
+    "spark-master",
+    "spark-worker"
+  ],
+  "images": {
+    "python": "python:3.12-slim-bookworm@sha256:54c85f3c47607a77f32adec749d3c81d1348bf25833671f512b26a9b6d778cb3",
+    "airflow": "apache/airflow:2.10.5-python3.12@sha256:6499a680a93463846d3a6be980e85d601dc97b0d81e82eed9ef5e5cb9da31b79",
+    "java": "eclipse-temurin:17-jre-jammy@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7",
+    "postgres": "postgres:16.6-bookworm@sha256:557fea37a744d5f4c8faab304b0a90858b53ab119735a88c131fd19dab802f36",
+    "redis": "redis:7.4.2-alpine@sha256:02419de7eddf55aa5bcf49efb74e88fa8d931b4d77c07eff8a6b2144472b6952",
+    "seaweedfs": "chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d"
+  },
+  "packages": {
+    "apache-airflow": "2.10.5",
+    "pyspark": "3.5.4",
+    "pyarrow": "19.0.0",
+    "boto3": "1.36.3",
+    "redis": "5.2.1"
+  },
+  "bucket": "hw2",
+  "input_key": "input/sample.csv",
+  "parquet_prefix": "features/",
+  "redis_prefix": "hw2:customer:"
+}
