@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+hw2/output/
+hw2/logs/
+hw2/.env
