@@ -1,0 +1,6 @@
+# Downloaded history and all generated state stay local.
+data/online-retail-ii-v1.csv.gz
+output/
+runtime/
+*.py[cod]
+.env

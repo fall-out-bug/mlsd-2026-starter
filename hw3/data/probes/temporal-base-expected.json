@@ -1,0 +1,24 @@
+{
+  "examples": {
+    "train": [
+      {"customer_id":"tiny","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"0.005000","average_order_amount":"0.00","label":0,"split":"train"},
+      {"customer_id":"half","as_of":"2024-04-01T00:00:00","order_count":2,"total_amount":"2.010000","average_order_amount":"1.00","label":0,"split":"train"},
+      {"customer_id":"boundary","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"4.000000","average_order_amount":"4.00","label":1,"split":"train"},
+      {"customer_id":"start","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"3.000000","average_order_amount":"3.00","label":0,"split":"train"},
+      {"customer_id":"zero","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"8.000000","average_order_amount":"8.00","label":0,"split":"train"},
+      {"customer_id":"duplicate","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"2.000000","average_order_amount":"2.00","label":0,"split":"train"},
+      {"customer_id":"label_end","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"5.000000","average_order_amount":"5.00","label":0,"split":"train"},
+      {"customer_id":"repeat","as_of":"2024-04-01T00:00:00","order_count":1,"total_amount":"10.000000","average_order_amount":"10.00","label":1,"split":"train"}
+    ],
+    "validation": [
+      {"customer_id":"repeat","as_of":"2024-06-01T00:00:00","order_count":1,"total_amount":"20.000000","average_order_amount":"20.00","label":1,"split":"validation"},
+      {"customer_id":"boundary","as_of":"2024-06-01T00:00:00","order_count":2,"total_amount":"103.000000","average_order_amount":"51.50","label":0,"split":"validation"},
+      {"customer_id":"future_only","as_of":"2024-06-01T00:00:00","order_count":1,"total_amount":"11.000000","average_order_amount":"11.00","label":0,"split":"validation"},
+      {"customer_id":"label_end","as_of":"2024-06-01T00:00:00","order_count":2,"total_amount":"12.000000","average_order_amount":"6.00","label":0,"split":"validation"},
+      {"customer_id":"zero","as_of":"2024-06-01T00:00:00","order_count":1,"total_amount":"8.000000","average_order_amount":"8.00","label":0,"split":"validation"}
+    ],
+    "test": [
+      {"customer_id":"repeat","as_of":"2024-08-01T00:00:00","order_count":1,"total_amount":"30.000000","average_order_amount":"30.00","label":1,"split":"test"}
+    ]
+  }
+}
