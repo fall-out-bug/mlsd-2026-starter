@@ -1,0 +1,17 @@
+{
+  "contract_version": "hw3-temporal-v1",
+  "execution_id": "replace_with_unique_execution_id",
+  "submission_sha": "replace_with_submission_sha",
+  "dataset_version": "online-retail-ii-v1",
+  "input_path": "online-retail-ii-v1.csv.gz",
+  "input_sha256": "7056f47bf85d8217cb3e5b71a815e75f3917feddd4a9c3f2da29a42c586706ad",
+  "observed_from": "2009-12-01T00:00:00",
+  "observed_until": "2011-12-09T00:00:00",
+  "history_days": 90,
+  "horizon_days": 30,
+  "snapshots": [
+    {"as_of": "2011-06-01T00:00:00", "split": "train"},
+    {"as_of": "2011-09-01T00:00:00", "split": "validation"},
+    {"as_of": "2011-11-01T00:00:00", "split": "test"}
+  ]
+}

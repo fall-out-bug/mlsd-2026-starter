@@ -1,0 +1,28 @@
+{
+  "schema_version": "hw3-starter-v1",
+  "dag_id": "online_retail_training",
+  "tasks": ["stage_input", "build_examples", "train_select", "evaluate", "publish"],
+  "services": [
+    "airflow-init", "airflow-webserver", "airflow-scheduler", "postgres",
+    "spark-master", "spark-worker", "seaweedfs", "mlflow"
+  ],
+  "images": {
+    "airflow": "apache/airflow:2.10.5-python3.12@sha256:6499a680a93463846d3a6be980e85d601dc97b0d81e82eed9ef5e5cb9da31b79",
+    "postgres": "postgres:16.6-bookworm@sha256:557fea37a744d5f4c8faab304b0a90858b53ab119735a88c131fd19dab802f36",
+    "seaweedfs": "chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d"
+  },
+  "packages": {
+    "python": "3.12",
+    "apache-airflow": "2.10.5",
+    "pyspark": "3.5.4",
+    "mlflow": "2.22.0",
+    "scikit-learn": "1.5.2",
+    "numpy": "1.26.4",
+    "scipy": "1.14.1",
+    "pandas": "2.1.4",
+    "pyarrow": "19.0.0",
+    "joblib": "1.4.2",
+    "boto3": "1.36.3"
+  },
+  "bucket": "hw3"
+}
