@@ -135,6 +135,14 @@ class AggregateCaptureBudget:
 
     def consume(self, raw_bytes):
         self.consumed += raw_bytes
+        if self.consumed > self.limit_bytes:
+            # Two capped streams can jointly overshoot the shared limit
+            # (the observer's own control output plus its pre-clear
+            # capture each drew a cap before either spent): the overrun
+            # is detected the moment it happens so the technical block
+            # below is always truthful — never a silent 80+41 over 100
+            # with exceeded=False (F5).
+            self.exceeded = True
 
     def mark_exceeded(self):
         self.exceeded = True
