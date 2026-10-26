@@ -398,6 +398,20 @@ class Observer:
                 "status": "PASSED",
                 "checks": {"public_examples": True, "artifact_hashes": True},
             }
+            # The public expected examples are only a subset of the server
+            # contract. Run the same course-owned artifact oracle locally so a
+            # local PASS cannot disagree with the server on artifact shape.
+            import oracle
+
+            artifact = oracle.check_artifacts(root, request, online=True)
+            self.result["checks"]["artifact"] = artifact
+            failed = sorted(
+                name for name, passed in artifact.get("checks", {}).items() if not passed
+            )
+            diagnostic = artifact.get("diagnostic", "artifact_contract")
+            if failed:
+                diagnostic = f"{diagnostic}:{','.join(failed)}"
+            ensure(artifact["status"] == "PASSED", diagnostic)
         else:
             import oracle
 
