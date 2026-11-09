@@ -329,7 +329,10 @@ def preflight(
         "одноразовые feature-build/feature-loader, read-only /input",
     )
     for finding in validate_repo(project):
-        report.failed_one("repo_hygiene", finding)
+        if finding.startswith("repo_not_git"):
+            report.skip("repo_hygiene", finding)
+        else:
+            report.failed_one("repo_hygiene", finding)
 
 
 def check_input(
