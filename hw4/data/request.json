@@ -1,0 +1,20 @@
+{
+  "contract_version": "hw4-serving-v1",
+  "execution_id": "hw4_toy_01",
+  "dataset_version": "toy-hw4-v1",
+  "input_path": "history.csv.gz",
+  "input_sha256": "5a3ea4933814ee4fd8f3eacd822a6287a7c0e784a969ab2e740578c7564c7f57",
+  "observed_from": "2011-01-01T00:00:00",
+  "observed_until": "2011-04-01T00:00:00",
+  "history_days": 90,
+  "snapshots": [
+    {
+      "as_of": "2011-03-01T00:00:00",
+      "split": "train"
+    },
+    {
+      "as_of": "2011-04-01T00:00:00",
+      "split": "test"
+    }
+  ]
+}

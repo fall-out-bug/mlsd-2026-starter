@@ -1,0 +1,8 @@
+# Полная история и сгенерированное состояние остаются локально.
+data/online-retail-ii-v1.csv.gz
+output/
+runtime/
+state/
+*.py[cod]
+.env
+__pycache__/
