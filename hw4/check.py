@@ -19,8 +19,7 @@ public interfaces and cleans it up afterwards:
 - E2  known client without a snapshot key -> 404 ``feature_not_found``;
 - E3  malformed request -> 400 ``invalid_request``.
 
-Version switches, restart persistence, dependency failures and the report are
-graded on the server; a local PASS never replaces the server verdict.
+A local PASS never replaces the server verdict.
 """
 
 from __future__ import annotations
