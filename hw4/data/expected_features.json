@@ -1,0 +1,62 @@
+{
+  "A:2011-03-01T00:00:00": {
+    "order_count_90d": 3,
+    "total_amount_90d": "55.000000",
+    "average_order_amount_90d": "18.33",
+    "days_since_last_order": 9,
+    "distinct_stock_codes_90d": 3,
+    "return_rate_90d": "0.250000",
+    "order_count_30d": 2,
+    "total_amount_30d": "35.000000"
+  },
+  "B:2011-03-01T00:00:00": {
+    "order_count_90d": 1,
+    "total_amount_90d": "100.000000",
+    "average_order_amount_90d": "100.00",
+    "days_since_last_order": 55,
+    "distinct_stock_codes_90d": 1,
+    "return_rate_90d": "0.000000",
+    "order_count_30d": 0,
+    "total_amount_30d": "0.000000"
+  },
+  "C:2011-03-01T00:00:00": {
+    "order_count_90d": 1,
+    "total_amount_90d": "50.000000",
+    "average_order_amount_90d": "50.00",
+    "days_since_last_order": 1,
+    "distinct_stock_codes_90d": 1,
+    "return_rate_90d": "0.000000",
+    "order_count_30d": 1,
+    "total_amount_30d": "50.000000"
+  },
+  "A:2011-04-01T00:00:00": {
+    "order_count_90d": 3,
+    "total_amount_90d": "55.000000",
+    "average_order_amount_90d": "18.33",
+    "days_since_last_order": 40,
+    "distinct_stock_codes_90d": 3,
+    "return_rate_90d": "0.250000",
+    "order_count_30d": 0,
+    "total_amount_30d": "0.000000"
+  },
+  "B:2011-04-01T00:00:00": {
+    "order_count_90d": 1,
+    "total_amount_90d": "100.000000",
+    "average_order_amount_90d": "100.00",
+    "days_since_last_order": 86,
+    "distinct_stock_codes_90d": 1,
+    "return_rate_90d": "0.000000",
+    "order_count_30d": 0,
+    "total_amount_30d": "0.000000"
+  },
+  "C:2011-04-01T00:00:00": {
+    "order_count_90d": 2,
+    "total_amount_90d": "80.000000",
+    "average_order_amount_90d": "40.00",
+    "days_since_last_order": 27,
+    "distinct_stock_codes_90d": 2,
+    "return_rate_90d": "0.000000",
+    "order_count_30d": 1,
+    "total_amount_30d": "30.000000"
+  }
+}

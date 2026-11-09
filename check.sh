@@ -17,8 +17,16 @@ case "${1:-HW1}" in
         fi
         exec python3 "$(dirname "$0")/hw3/check.py" "$@"
         ;;
+    HW4)
+        shift
+        if [ ! -f "$(dirname "$0")/hw4/check.py" ]; then
+            printf '%s\n' "Не найден hw4/check.py; скопируйте каталог hw4 из starter целиком" >&2
+            exit 2
+        fi
+        exec python3 "$(dirname "$0")/hw4/check.py" "$@"
+        ;;
     *)
-        printf '%s\n' "Укажите домашнюю работу: sh check.sh HW1, sh check.sh HW2 или sh check.sh HW3" >&2
+        printf '%s\n' "Укажите домашнюю работу: sh check.sh HW1, sh check.sh HW2, sh check.sh HW3 или sh check.sh HW4" >&2
         exit 2
         ;;
 esac

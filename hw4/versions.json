@@ -1,0 +1,35 @@
+{
+  "schema_version": "hw4-starter-v1",
+  "contract": "hw4-serving-v1",
+  "services": [
+    "gateway",
+    "feature-service",
+    "model-service",
+    "feature-build",
+    "feature-loader",
+    "redis",
+    "postgres",
+    "mlflow",
+    "seaweedfs"
+  ],
+  "images": {
+    "python": "python:3.12-slim-bookworm@sha256:54c85f3c47607a77f32adec749d3c81d1348bf25833671f512b26a9b6d778cb3",
+    "postgres": "postgres:16.6-bookworm@sha256:557fea37a744d5f4c8faab304b0a90858b53ab119735a88c131fd19dab802f36",
+    "redis": "redis:7.4.2-alpine@sha256:02419de7eddf55aa5bcf49efb74e88fa8d931b4d77c07eff8a6b2144472b6952",
+    "seaweedfs": "chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d"
+  },
+  "packages": {
+    "python": "3.12",
+    "pyspark": "3.5.4",
+    "mlflow": "2.22.0",
+    "scikit-learn": "1.5.2",
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "pyarrow": "19.0.0",
+    "joblib": "1.4.2",
+    "boto3": "1.36.3",
+    "redis": "5.2.1",
+    "psycopg2-binary": "2.9.9"
+  },
+  "bucket": "hw4"
+}
