@@ -23,8 +23,6 @@ Redis, модели в MLflow, эндпоинты, ошибки и лимиты.
 - `model-service` — применение модели из MLflow по имени и версии.
 - Две модели в MLflow: `hw4-logistic` и `hw4-boosting`.
 - Таблицу активной версии в Postgres и восстановление выбора после перезапуска.
-- Проверку версии на обязательной точке синхронизации `sync_token`:
-  `POST /predict` с `sync_token`, `GET /admin/sync/<token>` и `POST /admin/sync`.
 - `requirements.lock` и `README.md` с запуском и переменными окружения.
 
 Порт на хост публикует только `gateway` (8080); остальные сервисы доступны
