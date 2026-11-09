@@ -233,6 +233,8 @@ def validate_config(config: dict[str, Any], project: Path, input_dir: Path) -> N
     }
     if "8080" not in published:
         raise InvalidProject("compose_gateway_port_missing")
+    if published - {"8080"}:
+        raise InvalidProject("compose_unexpected_host_port: gateway")
 
     for dependency in ("feature-build", "feature-loader"):
         if (

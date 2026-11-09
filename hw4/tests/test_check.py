@@ -112,6 +112,13 @@ def test_config_requires_gateway_port_8080(tmp_path: Path) -> None:
     with pytest.raises(validate.InvalidProject, match="compose_unexpected_host_port"):
         validate.validate_config(exposed, project, input_dir)
 
+    gateway_extra = json.loads(json.dumps(_config(project, input_dir)))
+    gateway_extra["services"]["gateway"]["ports"].append(
+        {"published": 8081, "target": 8081}
+    )
+    with pytest.raises(validate.InvalidProject, match="compose_unexpected_host_port"):
+        validate.validate_config(gateway_extra, project, input_dir)
+
 
 def test_config_requires_read_only_input_mount(tmp_path: Path) -> None:
     project, input_dir = _project(tmp_path)
