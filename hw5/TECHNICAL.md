@@ -31,7 +31,7 @@ hw5/
     hw4-boosting/<version>/{pipeline.joblib, schema.json, manifest.json}
   config/models.json
   data/            ← поставляется курсом: открытые сценарии и SCENARIOS.md
-  versions.json    ← поставляется курсом: версии образов и библиотек (как в HW4)
+  versions.json    ← поставляется курсом: версии образов и библиотек
   requirements.lock
   README.md
   runbook.md
