@@ -1,0 +1,429 @@
+{
+  "name": "recovery",
+  "class": "восстановление в четырёх точках остановки",
+  "description": "Четыре контрольные точки §8: after_receive и after_state_write (события), after_choice_write и after_result_write_before_ack (задания). В каждой: пауза, наблюдение внешнего состояния и XPENDING, SIGKILL, перезапуск на тех же томах — ровно одно применение и один результат на request_id, без потерь и дублей (§6, §8).",
+  "question": "После kill_restart в точке after_state_write счётчик received_total уже равен 1, а запись не подтверждена. Какие две ошибки возможны при наивной реализации и почему каждая из них нарушает контракт?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "note",
+      "text": "Блок 1/4 — after_receive (event): запись получена, не обработана."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-recovery-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "pause",
+      "point": "after_receive",
+      "kind": "event"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-500",
+        "invoice_id": "I980",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "expect_pause",
+      "paused": true
+    },
+    {
+      "op": "expect_status",
+      "field": "events_pending",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 0,
+      "note": "after_receive: запись получена, но исход ещё не терминальный — received_total=0"
+    },
+    {
+      "op": "kill_restart"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 0
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-rec1",
+        "client_id": "A",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-rec1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.668519404214501
+    },
+    {
+      "op": "note",
+      "text": "Блок 2/4 — after_state_write (event): атомарный шаг применения уже выполнен, подтверждения нет."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-recovery-2"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "pause",
+      "point": "after_state_write"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-501",
+        "invoice_id": "I981",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "expect_pause",
+      "paused": true
+    },
+    {
+      "op": "expect_status",
+      "field": "events_pending",
+      "value": 1
+    },
+    {
+      "op": "note",
+      "text": "Счётчики уже обновлены тем же атомарным шагом, что и состояние (§6)."
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 1
+    },
+    {
+      "op": "kill_restart"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 0
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-rec2",
+        "client_id": "A",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-rec2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "20.000000",
+        "average_order_amount_90d": "20.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "20.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6774669448794686
+    },
+    {
+      "op": "note",
+      "text": "Ровно одно применение: total_amount_90d = 20.000000 (одна строка 2x10), не 40."
+    },
+    {
+      "op": "note",
+      "text": "Блок 3/4 — after_choice_write (request): выбор зафиксирован, прогноза ещё нет."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-recovery-3"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-502",
+        "invoice_id": "I982",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "pause",
+      "point": "after_choice_write"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-rec3",
+        "client_id": "A",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "expect_pause",
+      "paused": true
+    },
+    {
+      "op": "expect_pending_prediction",
+      "request_id": "r-rec3"
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 1
+    },
+    {
+      "op": "kill_restart"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-rec3",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.668519404214501
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "Блок 4/4 — after_result_write_before_ack (request): результат сохранён, задание не подтверждено."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-recovery-4"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-503",
+        "invoice_id": "I983",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "pause",
+      "point": "after_result_write_before_ack"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-rec4",
+        "client_id": "A",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "expect_pause",
+      "paused": true
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-rec4",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.668519404214501
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 1
+    },
+    {
+      "op": "kill_restart"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "Результат тот же: один логический результат на request_id, повторная доставка не дублирует его."
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-rec4",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.668519404214501
+    }
+  ]
+}

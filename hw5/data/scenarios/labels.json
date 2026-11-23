@@ -1,0 +1,265 @@
+{
+  "name": "labels",
+  "class": "зрелость меток и качество",
+  "description": "Зрелость: now >= t+30 при closed_until < t+30 — прогнозы незрелые и исключены из оценки; после закрытия горизонта — метки зрелые. Покупки ровно в t (входит в горизонт) и ровно в t+30 (не входит). Качество: log loss и ROC-AUC по сохранённым вероятностям на зрелом двухклассовом наборе (§11).",
+  "question": "В шаге с closed_until=2011-02-15 календарный горизонт t+30=2011-03-01 уже наступил (now=2011-03-01). Почему метки ещё незрелые и что произошло бы при обнулении их нулями?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-labels-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-30",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "note",
+      "text": "Базовые покупки строго до t=2011-01-30 дают исходы ok; различные суммы дают различные вероятности."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-l1",
+        "invoice_id": "I701",
+        "stock_code": "SL1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-15T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "L1",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-l2",
+        "invoice_id": "I702",
+        "stock_code": "SL2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-15T10:00:00",
+        "unit_price": "30.000000",
+        "customer_id": "L2",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-l3",
+        "invoice_id": "I703",
+        "stock_code": "SL3",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-15T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "L3",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "note",
+      "text": "Границы горизонта: покупка ровно в t (день 2011-01-30) и ровно в t+30 (день 2011-03-01)."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-l4",
+        "invoice_id": "I704",
+        "stock_code": "SL4",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-30T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "L1",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-l5",
+        "invoice_id": "I705",
+        "stock_code": "SL5",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-03-01T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "L2",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-l1",
+        "client_id": "L1",
+        "as_of": "2011-01-30"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-l2",
+        "client_id": "L2",
+        "as_of": "2011-01-30"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-l3",
+        "client_id": "L3",
+        "as_of": "2011-01-30"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-l1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 15,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6228236808793547
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-l2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "30.000000",
+        "average_order_amount_90d": "30.00",
+        "days_since_last_order": 15,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "30.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6417272184876981
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-l3",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "40.000000",
+        "average_order_amount_90d": "40.00",
+        "days_since_last_order": 15,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "40.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6510204315530348
+    },
+    {
+      "op": "note",
+      "text": "now дошло до t+30, но история закрыта только до 2011-02-15: метки незрелые, оценка исключена, не обнулена."
+    },
+    {
+      "op": "time",
+      "now": "2011-03-01",
+      "closed_until": "2011-02-15"
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.matured",
+      "value": 0
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.immature",
+      "value": 3
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version",
+      "value": {}
+    },
+    {
+      "op": "note",
+      "text": "Закрытие горизонта: closed_until=2011-03-01 >= t+30. Метка L1=1 (покупка в t), L2=0 (покупка ровно в t+30 не входит), L3=0."
+    },
+    {
+      "op": "time",
+      "now": "2011-03-01",
+      "closed_until": "2011-03-01"
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.matured",
+      "value": 3
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.immature",
+      "value": 0
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.n",
+      "value": 3
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.log_loss",
+      "value": 0.8508981137717807
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.roc_auc",
+      "value": 0.0
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.status",
+      "value": "ok"
+    },
+    {
+      "op": "note",
+      "text": "Контрпример «качество без сдвига»: зрелый двухклассовый набор, drift-алерта нет (распределение текущее = эталон, n<200 -> insufficient_data, алерт не открывается)."
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.statistic",
+      "value": 0.0
+    },
+    {
+      "op": "expect_no_alert",
+      "kind": "drift"
+    }
+  ]
+}

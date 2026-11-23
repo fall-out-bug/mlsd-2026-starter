@@ -1,0 +1,132 @@
+{
+  "name": "model_call",
+  "class": "настоящий вызов модели",
+  "description": "Не менее двух различающихся наборов признаков на одной фиксированной версии (hw4-logistic v1) с независимо рассчитанными вероятностями (допуск 1e-9) и незнакомый клиентский ID N1, отсутствующий в офлайн-снимке HW4 (§15).",
+  "question": "Клиент N1 не существует в офлайн-снимке HW4 (нет ключа hw4:features:N1:*). Почему потоковое задание для него завершается ok, и чему равна вероятность — сверьте с expected.json (допуск 1e-9)?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-modelcall-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-m1",
+        "invoice_id": "I970",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-m2",
+        "invoice_id": "I971",
+        "stock_code": "S2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "25.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "note",
+      "text": "Незнакомый клиент: N1 нет в history.csv.gz и в офлайн-снимке — поток не зависит от офлайн-ключей."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-m3",
+        "invoice_id": "I972",
+        "stock_code": "S3",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-25T10:00:00",
+        "unit_price": "15.000000",
+        "customer_id": "N1",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-m1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-m2",
+        "client_id": "N1",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-m1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 2,
+        "total_amount_90d": "45.000000",
+        "average_order_amount_90d": "22.50",
+        "days_since_last_order": 12,
+        "distinct_stock_codes_90d": 2,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 2,
+        "total_amount_30d": "45.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.5018873517705361
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-m2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "15.000000",
+        "average_order_amount_90d": "15.00",
+        "days_since_last_order": 7,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "15.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6558655847800694
+    },
+    {
+      "op": "note",
+      "text": "Наборы признаков различаются, вероятности должны различаться и совпасть с независимым расчётом (expected.json, model_call)."
+    }
+  ]
+}

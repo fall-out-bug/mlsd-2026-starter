@@ -1,0 +1,297 @@
+{
+  "name": "order",
+  "class": "независимость от порядка",
+  "description": "Один и тот же набор из пяти событий (покупки, отмена, вторая строка заказа) подаётся в прямом и обратном порядке из чистой среды. Задания подаются после границы обработки всего набора: признаки, вероятность и счётчики совпадают (§5, §15).",
+  "question": "Что изменится, если подать задание на прогноз до подачи e-o5, а не после всей перестановки? Какое правило контракта это фиксирует?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "note",
+      "text": "Фаза 1: прямой порядок доставки."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-order-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-05",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o1",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o2",
+        "invoice_id": "I901",
+        "stock_code": "S2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-12T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o3",
+        "invoice_id": "C900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-18T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o4",
+        "invoice_id": "I902",
+        "stock_code": "S3",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-25T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o5",
+        "invoice_id": "I900",
+        "stock_code": "S4",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "7.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-o1",
+        "client_id": "A",
+        "as_of": "2011-02-05"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-o1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 3,
+        "total_amount_90d": "52.000000",
+        "average_order_amount_90d": "17.33",
+        "days_since_last_order": 11,
+        "distinct_stock_codes_90d": 4,
+        "return_rate_90d": "0.250000",
+        "order_count_30d": 3,
+        "total_amount_30d": "52.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.15505178203210673
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 5
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 5
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 0
+    },
+    {
+      "op": "expect_status",
+      "field": "conflicts",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "Фаза 2: тот же набор в обратном порядке, снова чистая среда."
+    },
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-order-2"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-05",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o5",
+        "invoice_id": "I900",
+        "stock_code": "S4",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "7.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o4",
+        "invoice_id": "I902",
+        "stock_code": "S3",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-25T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o3",
+        "invoice_id": "C900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-18T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o2",
+        "invoice_id": "I901",
+        "stock_code": "S2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-12T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-o1",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-o2",
+        "client_id": "A",
+        "as_of": "2011-02-05"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-o2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 3,
+        "total_amount_90d": "52.000000",
+        "average_order_amount_90d": "17.33",
+        "days_since_last_order": 11,
+        "distinct_stock_codes_90d": 4,
+        "return_rate_90d": "0.250000",
+        "order_count_30d": 3,
+        "total_amount_30d": "52.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.15505178203210673
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 5
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 5
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 0
+    },
+    {
+      "op": "expect_status",
+      "field": "conflicts",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "r-o1 и r-o2 совпадают по признакам и вероятности — результат не зависит от порядка доставки набора."
+    }
+  ]
+}

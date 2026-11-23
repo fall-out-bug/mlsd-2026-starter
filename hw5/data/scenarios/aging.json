@@ -1,0 +1,199 @@
+{
+  "name": "aging",
+  "class": "агрегаты и границы окон; старение",
+  "description": "Старение окна 90 дней без новых покупок и правило последней строки заказа: заказ выходит из окна только после выхода последней своей строки. Проверяются точные границы [as_of-90d, as_of) и короткое окно 30 дней (§3, §6).",
+  "question": "В as_of=2011-04-07 первая строка заказа I500 (день 2011-01-05) уже вышла из окна, а сам заказ ещё считается. Каким единственным событием можно «выкинуть» I500 из окна и почему?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "note",
+      "text": "Чистая среда; активируем модель и продвигаем учебное время."
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-aging-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-200",
+        "invoice_id": "I500",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-05T10:00:00",
+        "unit_price": "30.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-202",
+        "invoice_id": "I501",
+        "stock_code": "S3",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-06T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "note",
+      "text": "Событие из будущего относительно now=2011-01-02…: принимается и войдёт в окна, когда now до него до доберётся (§4, п.4)."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-201",
+        "invoice_id": "I500",
+        "stock_code": "S2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-02-15T10:00:00",
+        "unit_price": "40.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-age-1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-age-1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 2,
+        "total_amount_90d": "40.000000",
+        "average_order_amount_90d": "20.00",
+        "days_since_last_order": 26,
+        "distinct_stock_codes_90d": 2,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 2,
+        "total_amount_30d": "40.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.44212411438019555
+    },
+    {
+      "op": "time",
+      "now": "2011-02-20",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-age-2",
+        "client_id": "A",
+        "as_of": "2011-02-20"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-age-2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 2,
+        "total_amount_90d": "80.000000",
+        "average_order_amount_90d": "40.00",
+        "days_since_last_order": 5,
+        "distinct_stock_codes_90d": 3,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "40.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.29374519563222884
+    },
+    {
+      "op": "time",
+      "now": "2011-04-07",
+      "closed_until": "2011-04-01"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-age-3",
+        "client_id": "A",
+        "as_of": "2011-04-07"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-age-3",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "40.000000",
+        "average_order_amount_90d": "40.00",
+        "days_since_last_order": 51,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 0,
+        "total_amount_30d": "0.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.32140443465233626
+    },
+    {
+      "op": "time",
+      "now": "2011-05-17",
+      "closed_until": "2011-04-01"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-age-4",
+        "client_id": "A",
+        "as_of": "2011-05-17"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-age-4",
+      "status": "no_history",
+      "features": null,
+      "model_name": null,
+      "model_version": null,
+      "probability": null
+    }
+  ]
+}

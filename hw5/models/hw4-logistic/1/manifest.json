@@ -1,0 +1,17 @@
+{
+  "contract_version": "hw4-serving-v1",
+  "model_name": "hw4-logistic",
+  "family": "logistic_regression",
+  "run_id": "a563ab0427414896a6a4c3de8d707d8b",
+  "created_at": "2026-11-23T04:50:13.386770+00:00",
+  "files": {
+    "pipeline.joblib": {
+      "sha256": "d1ecfa93079e28723a2ee1eeba64e5d8f466dab889fdc9217af0ce1bffaa57e2",
+      "bytes": 1582
+    },
+    "schema.json": {
+      "sha256": "f17635227cd49456df2c7d25cee2895da814e44aa0a70b7e42454dad5a7bbb91",
+      "bytes": 399
+    }
+  }
+}

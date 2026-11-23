@@ -1,0 +1,197 @@
+{
+  "name": "predict",
+  "class": "задания на прогноз: ok / no_history / повтор / конфликт",
+  "description": "Задания на прогноз: три состояния request_id, идемпотентность повтора, конфликт содержимого, invalid_request (as_of != now и нарушение схемы), чтение сохранённого результака и 404 для непринятого (§7).",
+  "question": "Повтор r-p1 с тем же payload не пересчитывает прогноз, а тот же request_id с другим as_of — конфликт. Где в порядке проверок проходит грань между duplicate и conflict?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-predict-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-p1",
+        "invoice_id": "I960",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p2",
+        "client_id": "D",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-p1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 22,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.5972182463057413
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-p2",
+      "status": "no_history",
+      "features": null,
+      "model_name": null,
+      "model_version": null,
+      "probability": null
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 2
+    },
+    {
+      "op": "note",
+      "text": "Повтор завершённого задания: тот же request_id и payload — идемпотентно, второго результата нет."
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 2
+    },
+    {
+      "op": "note",
+      "text": "Тот же request_id, другое содержимое -> отказ conflict (проверка идентичности до правила as_of==now)."
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p1",
+        "client_id": "A",
+        "as_of": "2011-02-02"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_conflict",
+      "value": 1
+    },
+    {
+      "op": "expect_rejection",
+      "index": 0,
+      "kind": "request",
+      "reason": [
+        "conflict",
+        "content_mismatch"
+      ]
+    },
+    {
+      "op": "note",
+      "text": "Новый request_id с as_of != now -> invalid_request; нарушение схемы -> invalid_request."
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p3",
+        "client_id": "A",
+        "as_of": "2011-02-02"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-p4",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_invalid",
+      "value": 2
+    },
+    {
+      "op": "expect_http",
+      "method": "GET",
+      "path": "/predictions/r-unknown",
+      "status": 404,
+      "code": "prediction_not_found"
+    },
+    {
+      "op": "note",
+      "text": "Сохранённый прогноз r-p1 не изменился после конфликтной подачи."
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-p1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 22,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.5972182463057413
+    }
+  ]
+}

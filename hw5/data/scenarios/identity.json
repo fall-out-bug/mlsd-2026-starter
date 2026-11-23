@@ -1,0 +1,210 @@
+{
+  "name": "identity",
+  "class": "дубликаты и конфликты",
+  "description": "Идентичность событий: повторная доставка той же записи, новый XADD с тем же event_id и содержимым (duplicate), с другим содержимым (conflict) и новая строка с тем же бизнес-содержимым, но новым event_id. Счётчики считают логические сообщения, агрегаты — только впервые принятые строки (TECHNICAL.md §4).",
+  "question": "Одна и та же бизнес-строка пришла дважды с разными event_id. Что произошло с суммой total_amount_90d и со счётчиком order_count_90d и почему они ведут себя по-разному?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "note",
+      "text": "Чистая среда: docker compose down -v && docker compose up -d --build --wait; начальные now=closed_until=2011-01-01 берутся из request.json (§5)."
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-identity-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-100",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 0
+    },
+    {
+      "op": "expect_status",
+      "field": "conflicts",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "Повтор: новый XADD с тем же payload (тот же event_id e-100) — распознаётся как duplicate, состояние не меняется."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-100",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "note",
+      "text": "Конфликт: тот же event_id e-100, другое содержимое (quantity 3) — отказ conflict."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-100",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 3,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 3
+    },
+    {
+      "op": "expect_status",
+      "field": "conflicts",
+      "value": 1
+    },
+    {
+      "op": "expect_rejection",
+      "index": 0,
+      "kind": "event",
+      "reason": [
+        "conflict",
+        "content_mismatch"
+      ]
+    },
+    {
+      "op": "note",
+      "text": "Новая строка: тот же бизнес-содержимое, новый event_id e-101 — принимается как отдельная строка (правило HW2)."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-101",
+        "invoice_id": "I900",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 4
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "duplicates",
+      "value": 1
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-id-1",
+        "client_id": "A",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-id-1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "40.000000",
+        "average_order_amount_90d": "40.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "40.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6949730859641007
+    },
+    {
+      "op": "note",
+      "text": "Сумма удвоилась (2 строки по 20.000000), а order_count_90d остался 1: счётчик считает различные invoice_id (§3)."
+    }
+  ]
+}

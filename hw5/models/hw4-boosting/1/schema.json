@@ -1,0 +1,17 @@
+{
+  "contract_version": "hw4-serving-v1",
+  "model_name": "hw4-boosting",
+  "model_family": "gradient_boosting",
+  "feature_order": [
+    "order_count_90d",
+    "total_amount_90d",
+    "average_order_amount_90d",
+    "days_since_last_order",
+    "distinct_stock_codes_90d",
+    "return_rate_90d",
+    "order_count_30d",
+    "total_amount_30d"
+  ],
+  "target": "label",
+  "input_dtype": "float64"
+}

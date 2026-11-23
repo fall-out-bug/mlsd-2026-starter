@@ -1,0 +1,28 @@
+{
+  "contract_version": "hw4-serving-v1",
+  "default_model": "hw4-logistic",
+  "default_version": "1",
+  "models": [
+    {
+      "name": "hw4-logistic",
+      "family": "logistic_regression",
+      "required": true
+    },
+    {
+      "name": "hw4-boosting",
+      "family": "gradient_boosting",
+      "required": true
+    }
+  ],
+  "selection_rule": "validation_log_loss_v1",
+  "feature_order": [
+    "order_count_90d",
+    "total_amount_90d",
+    "average_order_amount_90d",
+    "days_since_last_order",
+    "distinct_stock_codes_90d",
+    "return_rate_90d",
+    "order_count_30d",
+    "total_amount_30d"
+  ]
+}

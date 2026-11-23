@@ -1,0 +1,17 @@
+{
+  "contract_version": "hw4-serving-v1",
+  "model_name": "hw4-boosting",
+  "family": "gradient_boosting",
+  "run_id": "f85c59622f0d42edb92bbb2669eb1088",
+  "created_at": "2026-11-23T04:50:13.524134+00:00",
+  "files": {
+    "pipeline.joblib": {
+      "sha256": "64382e6af180786e5e56d70e44da663ff09097eb63e73f93ddd8232f7b02ae92",
+      "bytes": 26502
+    },
+    "schema.json": {
+      "sha256": "95a8d4235b87f060e446fde728236c3dedf6e98cf23cb50809e393144aad82ec",
+      "bytes": 397
+    }
+  }
+}

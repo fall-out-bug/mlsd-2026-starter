@@ -1,0 +1,17 @@
+{
+  "contract_version": "hw5-stream-v1",
+  "execution_id": "hw5_toy_01",
+  "dataset_version": "toy-hw5-v1",
+  "input_path": "history.csv.gz",
+  "input_sha256": "",
+  "observed_from": "2011-01-01T00:00:00",
+  "observed_until": "2011-04-01T00:00:00",
+  "history_days": 90,
+  "horizon_days": 30,
+  "reference_from": "2010-12-01T00:00:00",
+  "reference_until": "2011-03-01T00:00:00",
+  "snapshots": [
+    {"as_of": "2011-03-01T00:00:00", "split": "train"},
+    {"as_of": "2011-04-01T00:00:00", "split": "test"}
+  ]
+}

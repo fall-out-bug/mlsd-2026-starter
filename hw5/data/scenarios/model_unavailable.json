@@ -1,0 +1,157 @@
+{
+  "name": "model_unavailable",
+  "class": "недоступность модели",
+  "description": "Блокировка соединения stream-worker -> model-service: задание ok остаётся ожидающим (requests_pending >= 1, фиктивной вероятности нет), no_history завершается, события обрабатываются; после восстановления — ровно один правильный результат (§9).",
+  "question": "Пока model-service остановлен, поданы r-u1 (ok) и r-u2 (no_history). Какое из заданий завершится и почему? Что вернёт GET /predictions/r-u1 до восстановления?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-mu-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-u1",
+        "invoice_id": "I990",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "model_block"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-u1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-u2",
+        "client_id": "D",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_predictions",
+      "request_ids": [
+        "r-u2"
+      ]
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-u2",
+      "status": "no_history",
+      "features": null,
+      "model_name": null,
+      "model_version": null,
+      "probability": null
+    },
+    {
+      "op": "expect_pending_prediction",
+      "request_id": "r-u1"
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 1
+    },
+    {
+      "op": "note",
+      "text": "События обрабатываются во время блокировки: worker не останавливается. Границу ждём только по событиям: r-u1 не будет подтверждён, пока модель недоступна."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-u2",
+        "invoice_id": "I991",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-11T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_events"
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "events_pending",
+      "value": 0
+    },
+    {
+      "op": "model_unblock"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-u1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 22,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "10.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.5972182463057413
+    },
+    {
+      "op": "expect_status",
+      "field": "predictions_written",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "requests_pending",
+      "value": 0
+    }
+  ]
+}

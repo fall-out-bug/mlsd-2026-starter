@@ -1,0 +1,152 @@
+{
+  "name": "late",
+  "class": "опоздания до закрытия",
+  "description": "Опоздавшая покупка: день события в прошлом относительно now, но история ещё не закрыта (день >= closed_until). Опоздание меняет следующий снимок и не меняет уже сохранённый прогноз (§5, §7).",
+  "question": "r-late-1 завершён до подачи опоздавшей покупки. Изменится ли его сохранённый результат после e-301, и войдёт ли покупка в r-late-2 с тем же as_of?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-late-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-05"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-300",
+        "invoice_id": "I910",
+        "stock_code": "S9",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-10T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-late-1",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-late-1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "20.000000",
+        "average_order_amount_90d": "20.00",
+        "days_since_last_order": 22,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "20.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6069588641984575
+    },
+    {
+      "op": "note",
+      "text": "Опоздавшая покупка: день 2011-01-20 < now=2011-02-01, но >= closed_until=2011-01-05 — принимается."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-301",
+        "invoice_id": "I911",
+        "stock_code": "S9",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "50.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "closed_past_rejected",
+      "value": 0
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-late-2",
+        "client_id": "A",
+        "as_of": "2011-02-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-late-2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 2,
+        "total_amount_90d": "70.000000",
+        "average_order_amount_90d": "35.00",
+        "days_since_last_order": 12,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 2,
+        "total_amount_30d": "70.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6177716774036836
+    },
+    {
+      "op": "note",
+      "text": "Неизменность: r-late-1 возвращает сохранённый результат (повторное чтение)."
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-late-1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "20.000000",
+        "average_order_amount_90d": "20.00",
+        "days_since_last_order": 22,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "20.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6069588641984575
+    }
+  ]
+}

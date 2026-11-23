@@ -1,0 +1,338 @@
+{
+  "name": "drift",
+  "class": "сдвиг входов и заморозка эталона",
+  "description": "Синтетические 220 клиентов: предварительный эталон (n<200 -> insufficient_data, алерта нет), полнота и заморозка при closed_until >= reference_until, затем сдвиг старением окна (order_count_90d у всех уходит в корзину [0]) -> statistic=1.0, status=drift, алерт critical. Контрпример «сдвиг без зрелых меток»: качество not_assessed при открытом drift-алерте (§11, §15).",
+  "question": "После заморозки эталона алерт drift открыт (statistic=1.0, critical). Можно ли объявить падение качества модели доказанным? Что в отчёте противоречит такому выводу?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-drift-1"
+    },
+    {
+      "op": "note",
+      "text": "Клиенты M1/M2: зрелые метки для контрпримера (прогнозы на t=2011-01-20, горизонт закрыт)."
+    },
+    {
+      "op": "time",
+      "now": "2011-01-20",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-mb1",
+        "invoice_id": "I881",
+        "stock_code": "SM1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-18T10:00:00",
+        "unit_price": "12.000000",
+        "customer_id": "M1",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-mb2",
+        "invoice_id": "I882",
+        "stock_code": "SM2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-18T11:00:00",
+        "unit_price": "18.000000",
+        "customer_id": "M2",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-mh1",
+        "invoice_id": "I883",
+        "stock_code": "SM1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-25T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "M1",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-mh2",
+        "invoice_id": "I884",
+        "stock_code": "SM2",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-26T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "M2",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "m-r1",
+        "client_id": "M1",
+        "as_of": "2011-01-20"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "m-r2",
+        "client_id": "M2",
+        "as_of": "2011-01-20"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "m-r1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "12.000000",
+        "average_order_amount_90d": "12.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "12.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6703189443258509
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "m-r2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "18.000000",
+        "average_order_amount_90d": "18.00",
+        "days_since_last_order": 2,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "18.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6756875445548235
+    },
+    {
+      "op": "time",
+      "now": "2011-02-26",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "note",
+      "text": "Первая партия синтетики: 120 клиентов — эталон предварительный, n<200."
+    },
+    {
+      "op": "events_file",
+      "path": "drift-events.json",
+      "from_index": 0,
+      "to_index": 120
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.status",
+      "value": "insufficient_data"
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.reference.frozen",
+      "value": false
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.reference.n",
+      "value": 122
+    },
+    {
+      "op": "expect_no_alert",
+      "kind": "drift"
+    },
+    {
+      "op": "note",
+      "text": "Полная синтетика: 220 клиентов + M1/M2 = 222; статистика 0, но алерта всё ещё нет (эталон не заморожен)."
+    },
+    {
+      "op": "events_file",
+      "path": "drift-events.json",
+      "from_index": 120,
+      "to_index": 220
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.status",
+      "value": "ok"
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.reference.n",
+      "value": 222
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.statistic",
+      "value": 0.0
+    },
+    {
+      "op": "expect_no_alert",
+      "kind": "drift"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-d1",
+        "client_id": "drift-000",
+        "as_of": "2011-02-26"
+      }
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-d2",
+        "client_id": "drift-001",
+        "as_of": "2011-02-26"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-d1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "1.000000",
+        "average_order_amount_90d": "1.00",
+        "days_since_last_order": 52,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 0,
+        "total_amount_30d": "0.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.4749779705100918
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-d2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "2.000000",
+        "average_order_amount_90d": "2.00",
+        "days_since_last_order": 51,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 0,
+        "total_amount_30d": "0.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.47457708733844733
+    },
+    {
+      "op": "note",
+      "text": "Заморозка и сдвиг: closed_until >= reference_until замораживает эталон; now далеко в будущем — окна клиентов опустели."
+    },
+    {
+      "op": "time",
+      "now": "2011-06-01",
+      "closed_until": "2011-03-01"
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.reference.frozen",
+      "value": true
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.reference.n",
+      "value": 222
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.current.n",
+      "value": 222
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.statistic",
+      "value": 1.0
+    },
+    {
+      "op": "expect_report",
+      "path": "drift.status",
+      "value": "drift"
+    },
+    {
+      "op": "expect_alert",
+      "kind": "drift",
+      "severity": "critical",
+      "status": "open"
+    },
+    {
+      "op": "note",
+      "text": "Контрпример «сдвиг без зрелых меток»: меткая часть — только m-r1/m-r2 (обе метки 1, один класс)."
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.matured",
+      "value": 2
+    },
+    {
+      "op": "expect_report",
+      "path": "labels.immature",
+      "value": 2
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.status",
+      "value": "not_assessed"
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.n",
+      "value": 2
+    },
+    {
+      "op": "expect_report",
+      "path": "quality.by_version.hw4-logistic.1.roc_auc",
+      "value": null
+    }
+  ]
+}

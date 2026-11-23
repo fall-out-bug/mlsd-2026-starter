@@ -1,0 +1,170 @@
+{
+  "name": "closure",
+  "class": "закрытие истории",
+  "description": "Закрытие: новый event_id с днём < closed_until отвергается closed_past; закрытие необратимо — повтор с новым event_id отклоняется так же. Монотонность и границы /admin/time: now не убывает, closed_until <= now и <= observed_until (§5).",
+  "question": "Событие e-351 отклонено closed_past. Можно ли «протолкнуть» его, повторив с новым event_id или изменив payload? Что произойдёт с состоянием клиента A?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-10"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-350",
+        "invoice_id": "I950",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-15T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-351",
+        "invoice_id": "I951",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-08T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "closed_past_rejected",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 2
+    },
+    {
+      "op": "expect_rejection",
+      "index": 0,
+      "kind": "event",
+      "reason": [
+        "closed_past"
+      ]
+    },
+    {
+      "op": "note",
+      "text": "Закрытие необратимо: новый event_id с тем же днём отклоняется так же."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-352",
+        "invoice_id": "I951",
+        "stock_code": "S1",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-09T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "A",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "closed_past_rejected",
+      "value": 2
+    },
+    {
+      "op": "note",
+      "text": "Монотонность и границы времени: нарушение -> 400 invalid_request, время не меняется."
+    },
+    {
+      "op": "time_reject",
+      "now": "2011-01-30",
+      "closed_until": "2011-01-10"
+    },
+    {
+      "op": "time_reject",
+      "now": "2011-02-01",
+      "closed_until": "2011-02-05"
+    },
+    {
+      "op": "time_reject",
+      "now": "2011-04-02",
+      "closed_until": "2011-04-02"
+    },
+    {
+      "op": "expect_status",
+      "field": "now",
+      "value": "2011-02-01"
+    },
+    {
+      "op": "expect_status",
+      "field": "closed_until",
+      "value": "2011-01-10"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-closure-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-03-01",
+      "closed_until": "2011-02-01"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-clo-1",
+        "client_id": "A",
+        "as_of": "2011-03-01"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-clo-1",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "10.000000",
+        "average_order_amount_90d": "10.00",
+        "days_since_last_order": 45,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 0,
+        "total_amount_30d": "0.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.4637135941681199
+    }
+  ]
+}

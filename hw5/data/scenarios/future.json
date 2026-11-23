@@ -1,0 +1,154 @@
+{
+  "name": "future",
+  "class": "события из будущего",
+  "description": "Событие с днём > now принимается и хранится, но не попадает в признаки, пока now не до него доберётся. Заодно: пустой customer_id (unattributed) и непокупочная строка с quantity=0 (в агрегаты не входит) (§4, §6, §7).",
+  "question": "Почему r-fut-1 возвращает no_history, хотя событие клиента B уже принято и лежит в состоянии? Что изменится после продвижения now на 2011-02-20?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-future-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-01-12",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-400",
+        "invoice_id": "I800",
+        "stock_code": "S8",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-02-15T10:00:00",
+        "unit_price": "20.000000",
+        "customer_id": "B",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 1
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-fut-1",
+        "client_id": "B",
+        "as_of": "2011-01-12"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-fut-1",
+      "status": "no_history",
+      "features": null,
+      "model_name": null,
+      "model_version": null,
+      "probability": null
+    },
+    {
+      "op": "note",
+      "text": "Пустой customer_id: событие принимается, но клиенту не приписывается."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-401",
+        "invoice_id": "I801",
+        "stock_code": "S8",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-02-16T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "note",
+      "text": "Нулевое количество: не покупка и не отмена, в агрегаты не входит."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-402",
+        "invoice_id": "I802",
+        "stock_code": "S8",
+        "description": "item",
+        "quantity": 0,
+        "invoice_at": "2011-02-16T10:00:00",
+        "unit_price": "5.000000",
+        "customer_id": "B",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "unattributed",
+      "value": 1
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 2
+    },
+    {
+      "op": "time",
+      "now": "2011-02-20",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "request",
+      "payload": {
+        "request_id": "r-fut-2",
+        "client_id": "B",
+        "as_of": "2011-02-20"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_prediction",
+      "request_id": "r-fut-2",
+      "status": "ok",
+      "features": {
+        "order_count_90d": 1,
+        "total_amount_90d": "20.000000",
+        "average_order_amount_90d": "20.00",
+        "days_since_last_order": 5,
+        "distinct_stock_codes_90d": 1,
+        "return_rate_90d": "0.000000",
+        "order_count_30d": 1,
+        "total_amount_30d": "20.000000"
+      },
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "probability": 0.6673034053090872
+    },
+    {
+      "op": "expect_report",
+      "path": "input_quality.non_purchase_rows",
+      "value": 1
+    }
+  ]
+}

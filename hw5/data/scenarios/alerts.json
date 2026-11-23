@@ -1,0 +1,574 @@
+{
+  "name": "alerts",
+  "class": "алерты и подтверждения",
+  "description": "input_quality (окно >=20 записей с >=5% invalid, оценка только при закрытии окна успешным POST /admin/time), event_conflict (курсор отказов, поглощение открытым алертом, один новый после ack), stream_lag (oldest_pending_idle_seconds >= 120 при паузе), ack идемпотентен, неизвестный id -> 404 alert_not_found (§11).",
+  "question": "input_quality не открывается при GET /monitor/report, хотя счётчики окна уже показывают 24 записи и 2 invalid. Какое событие закрывает окно и почему отчёт сам по себе алерт не открывает?",
+  "input": {
+    "observed_from": "2011-01-01",
+    "observed_until": "2011-04-01",
+    "reference_until": "2011-03-01"
+  },
+  "steps": [
+    {
+      "op": "reset"
+    },
+    {
+      "op": "activate",
+      "model_name": "hw4-logistic",
+      "model_version": "1",
+      "activation_id": "scen-alerts-1"
+    },
+    {
+      "op": "time",
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-00",
+        "invoice_id": "IA00",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-00",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-01",
+        "invoice_id": "IA01",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-01",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-02",
+        "invoice_id": "IA02",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-02",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-03",
+        "invoice_id": "IA03",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-03",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-04",
+        "invoice_id": "IA04",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-04",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-05",
+        "invoice_id": "IA05",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-05",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-06",
+        "invoice_id": "IA06",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-06",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-07",
+        "invoice_id": "IA07",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-07",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-08",
+        "invoice_id": "IA08",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-08",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-09",
+        "invoice_id": "IA09",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-09",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-10",
+        "invoice_id": "IA10",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-10",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-11",
+        "invoice_id": "IA11",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-11",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-12",
+        "invoice_id": "IA12",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-12",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-13",
+        "invoice_id": "IA13",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-13",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-14",
+        "invoice_id": "IA14",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-14",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-15",
+        "invoice_id": "IA15",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-15",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-16",
+        "invoice_id": "IA16",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-16",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-17",
+        "invoice_id": "IA17",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-17",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-18",
+        "invoice_id": "IA18",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-18",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-19",
+        "invoice_id": "IA19",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-19",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-20",
+        "invoice_id": "IA20",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-20",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-al-21",
+        "invoice_id": "IA21",
+        "stock_code": "SA",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-21",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a-bad1",
+        "invoice_id": "IAB1",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "1.000000",
+        "customer_id": "al-00"
+      }
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a-bad2",
+        "invoice_id": "IAB2",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": "1",
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "1.000000",
+        "customer_id": "al-01",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "received_total",
+      "value": 24
+    },
+    {
+      "op": "expect_status",
+      "field": "invalid_events",
+      "value": 2
+    },
+    {
+      "op": "expect_status",
+      "field": "attributed_new",
+      "value": 22
+    },
+    {
+      "op": "expect_report",
+      "path": "input_quality.since_last_advance.received",
+      "value": 24
+    },
+    {
+      "op": "expect_report",
+      "path": "input_quality.since_last_advance.invalid_events",
+      "value": 2
+    },
+    {
+      "op": "expect_no_alert",
+      "kind": "input_quality"
+    },
+    {
+      "op": "note",
+      "text": "Закрытие окна успешным продвижением времени: 24 >= 20 и 2/24 >= 5% -> алерт input_quality."
+    },
+    {
+      "op": "time",
+      "now": "2011-02-02",
+      "closed_until": "2011-01-01"
+    },
+    {
+      "op": "expect_alert",
+      "kind": "input_quality",
+      "severity": "warning",
+      "status": "open"
+    },
+    {
+      "op": "expect_report",
+      "path": "input_quality.since_last_advance.received",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "event_conflict: курсор отказов уходит вперёд — алерт открывается при очередной оценке (например, отчётом)."
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a1",
+        "invoice_id": "IA100",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-00",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a1",
+        "invoice_id": "IA100",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": 2,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-00",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "conflicts",
+      "value": 1
+    },
+    {
+      "op": "expect_alert",
+      "kind": "event_conflict",
+      "severity": "warning",
+      "status": "open"
+    },
+    {
+      "op": "note",
+      "text": "ack идемпотентен: повтор возвращает тот же acked_at."
+    },
+    {
+      "op": "ack_alert",
+      "kind": "input_quality"
+    },
+    {
+      "op": "expect_alert",
+      "kind": "input_quality",
+      "severity": "warning",
+      "status": "acknowledged"
+    },
+    {
+      "op": "ack_alert",
+      "kind": "input_quality",
+      "same_as_last": true
+    },
+    {
+      "op": "expect_http",
+      "method": "POST",
+      "path": "/monitor/alerts/no-such-alert/ack",
+      "status": 404,
+      "code": "alert_not_found",
+      "via": "monitor"
+    },
+    {
+      "op": "note",
+      "text": "stream_lag: пауза держит запись неподтверждённой; ждем >=120 секунд (медленный шаг)."
+    },
+    {
+      "op": "pause",
+      "point": "after_receive",
+      "kind": "event"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a2",
+        "invoice_id": "IA101",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": 1,
+        "invoice_at": "2011-01-21T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-01",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "expect_pause",
+      "paused": true
+    },
+    {
+      "op": "sleep",
+      "seconds": 125
+    },
+    {
+      "op": "expect_report",
+      "path": "stream_health.oldest_pending_idle_seconds",
+      "at_least": 120
+    },
+    {
+      "op": "expect_alert",
+      "kind": "stream_lag",
+      "severity": "warning",
+      "status": "open"
+    },
+    {
+      "op": "resume"
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_status",
+      "field": "events_pending",
+      "value": 0
+    },
+    {
+      "op": "note",
+      "text": "Повторное открытие event_conflict после ack: курсор снова ушёл вперёд — ровно один новый алерт."
+    },
+    {
+      "op": "ack_alert",
+      "kind": "event_conflict"
+    },
+    {
+      "op": "event",
+      "payload": {
+        "event_id": "e-a1",
+        "invoice_id": "IA100",
+        "stock_code": "SB",
+        "description": "item",
+        "quantity": 3,
+        "invoice_at": "2011-01-20T10:00:00",
+        "unit_price": "10.000000",
+        "customer_id": "al-00",
+        "country": "GB"
+      }
+    },
+    {
+      "op": "wait_boundary"
+    },
+    {
+      "op": "expect_alert",
+      "kind": "event_conflict",
+      "severity": "warning",
+      "status": "open"
+    }
+  ]
+}

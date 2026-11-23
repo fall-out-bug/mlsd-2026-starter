@@ -1,0 +1,2101 @@
+{
+  "contract": "hw5-stream-v1",
+  "method": "Независимый расчёт по контракту: Decimal, округление half-even, счётчики заказов по различным invoice_id, return_rate по различным invoice, окна [as_of-90d, as_of) и [as_of-30d, as_of), метки — покупка в [t, t+30), log loss с клиппингом 1e-12, ROC-AUC с половинным вкладом ничьих. Вероятности — применение артефактов models/<name>/<version>/pipeline.joblib к зафиксированным признакам в порядке schema.json; сравнение с допуском 1e-9.",
+  "feature_order": [
+    "order_count_90d",
+    "total_amount_90d",
+    "average_order_amount_90d",
+    "days_since_last_order",
+    "distinct_stock_codes_90d",
+    "return_rate_90d",
+    "order_count_30d",
+    "total_amount_30d"
+  ],
+  "tolerance": 1e-09,
+  "scenarios": {
+    "aging": {
+      "requests": {
+        "r-age-1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 2,
+            "total_amount_90d": "40.000000",
+            "average_order_amount_90d": "20.00",
+            "days_since_last_order": 26,
+            "distinct_stock_codes_90d": 2,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 2,
+            "total_amount_30d": "40.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.44212411438019555
+        },
+        "r-age-2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 2,
+            "total_amount_90d": "80.000000",
+            "average_order_amount_90d": "40.00",
+            "days_since_last_order": 5,
+            "distinct_stock_codes_90d": 3,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "40.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.29374519563222884
+        },
+        "r-age-3": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "40.000000",
+            "average_order_amount_90d": "40.00",
+            "days_since_last_order": 51,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 0,
+            "total_amount_30d": "0.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.32140443465233626
+        },
+        "r-age-4": {
+          "status": "no_history",
+          "features": null,
+          "model_name": null,
+          "model_version": null,
+          "probability": null
+        }
+      },
+      "status_final": {
+        "now": "2011-05-17",
+        "closed_until": "2011-04-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 3,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 3,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 4,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-05-17",
+        "closed_until": "2011-04-01",
+        "input_quality": {
+          "received_total": 3,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 3,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 0,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 1.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "frozen": true
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 4,
+          "ok": 3,
+          "no_history": 1,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 3,
+                "mean_probability": 0.35242458155492024,
+                "histogram": [
+                  0,
+                  2,
+                  1,
+                  0,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 2,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "n": 2,
+                "log_loss": 0.5819719142283599,
+                "roc_auc": 1.0,
+                "status": "ok"
+              }
+            }
+          }
+        }
+      }
+    },
+    "alerts": {
+      "requests": {},
+      "status_final": {
+        "now": "2011-02-02",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 28,
+        "invalid_events": 2,
+        "conflicts": 2,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 24,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 0,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-02",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 28,
+          "invalid_events": 2,
+          "conflicts": 2,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 24,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 4,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 22,
+            "bins": [
+              0.0,
+              0.9090909090909091,
+              0.09090909090909091,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 22,
+            "bins": [
+              0.0,
+              0.9090909090909091,
+              0.09090909090909091,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 0,
+          "ok": 0,
+          "no_history": 0,
+          "by_version": {}
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 0
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "closure": {
+      "requests": {
+        "r-clo-1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 45,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 0,
+            "total_amount_30d": "0.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.4637135941681199
+        }
+      },
+      "status_final": {
+        "now": "2011-03-01",
+        "closed_until": "2011-02-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 3,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 2,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 1,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 1,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-03-01",
+        "closed_until": "2011-02-01",
+        "input_quality": {
+          "received_total": 3,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 2,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 1,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 0,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 1,
+          "ok": 1,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.4637135941681199,
+                "histogram": [
+                  0,
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "drift": {
+      "requests": {
+        "m-r1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "12.000000",
+            "average_order_amount_90d": "12.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "12.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6703189443258509
+        },
+        "m-r2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "18.000000",
+            "average_order_amount_90d": "18.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "18.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6756875445548235
+        },
+        "r-d1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "1.000000",
+            "average_order_amount_90d": "1.00",
+            "days_since_last_order": 52,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 0,
+            "total_amount_30d": "0.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.4749779705100918
+        },
+        "r-d2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "2.000000",
+            "average_order_amount_90d": "2.00",
+            "days_since_last_order": 51,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 0,
+            "total_amount_30d": "0.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.47457708733844733
+        }
+      },
+      "status_final": {
+        "now": "2011-06-01",
+        "closed_until": "2011-03-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 224,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 224,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 4,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-06-01",
+        "closed_until": "2011-03-01",
+        "input_quality": {
+          "received_total": 224,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 224,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 0,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "drift",
+          "statistic": 1.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 222,
+            "bins": [
+              0.0,
+              0.990990990990991,
+              0.009009009009009009,
+              0.0,
+              0.0
+            ],
+            "frozen": true
+          },
+          "current": {
+            "n": 222,
+            "bins": [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 4,
+          "ok": 4,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 4,
+                "mean_probability": 0.5738903866823034,
+                "histogram": [
+                  0,
+                  0,
+                  2,
+                  2,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 2,
+          "immature": 2
+        },
+        "quality": {
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "n": 2,
+                "log_loss": 0.39601308277419345,
+                "roc_auc": null,
+                "status": "not_assessed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "future": {
+      "requests": {
+        "r-fut-1": {
+          "status": "no_history",
+          "features": null,
+          "model_name": null,
+          "model_version": null,
+          "probability": null
+        },
+        "r-fut-2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "20.000000",
+            "average_order_amount_90d": "20.00",
+            "days_since_last_order": 5,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "20.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6673034053090872
+        }
+      },
+      "status_final": {
+        "now": "2011-02-20",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 3,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 1,
+        "attributed_new": 2,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 2,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-20",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 3,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 1,
+          "attributed_new": 2,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 1,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 0,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 2,
+          "ok": 1,
+          "no_history": 1,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.6673034053090872,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "identity": {
+      "requests": {
+        "r-id-1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "40.000000",
+            "average_order_amount_90d": "40.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "40.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6949730859641007
+        }
+      },
+      "status_final": {
+        "now": "2011-01-12",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 4,
+        "invalid_events": 0,
+        "conflicts": 1,
+        "closed_past_rejected": 0,
+        "duplicates": 1,
+        "unattributed": 0,
+        "attributed_new": 2,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 1,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-01-12",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 4,
+          "invalid_events": 0,
+          "conflicts": 1,
+          "closed_past_rejected": 0,
+          "duplicates": 1,
+          "unattributed": 0,
+          "attributed_new": 2,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 4,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 1,
+          "ok": 1,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.6949730859641007,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "labels": {
+      "requests": {
+        "r-l1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 15,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6228236808793547
+        },
+        "r-l2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "30.000000",
+            "average_order_amount_90d": "30.00",
+            "days_since_last_order": 15,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "30.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6417272184876981
+        },
+        "r-l3": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "40.000000",
+            "average_order_amount_90d": "40.00",
+            "days_since_last_order": 15,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "40.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6510204315530348
+        }
+      },
+      "status_final": {
+        "now": "2011-03-01",
+        "closed_until": "2011-03-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 5,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 5,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 3,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-03-01",
+        "closed_until": "2011-03-01",
+        "input_quality": {
+          "received_total": 5,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 5,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 0,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 3,
+            "bins": [
+              0.0,
+              0.6666666666666666,
+              0.3333333333333333,
+              0.0,
+              0.0
+            ],
+            "frozen": true
+          },
+          "current": {
+            "n": 3,
+            "bins": [
+              0.0,
+              0.6666666666666666,
+              0.3333333333333333,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 3,
+          "ok": 3,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 3,
+                "mean_probability": 0.6385237769733625,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  3,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 3,
+          "immature": 0
+        },
+        "quality": {
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "n": 3,
+                "log_loss": 0.8508981137717807,
+                "roc_auc": 0.0,
+                "status": "ok"
+              }
+            }
+          }
+        }
+      }
+    },
+    "late": {
+      "requests": {
+        "r-late-1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "20.000000",
+            "average_order_amount_90d": "20.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "20.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6069588641984575
+        },
+        "r-late-2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 2,
+            "total_amount_90d": "70.000000",
+            "average_order_amount_90d": "35.00",
+            "days_since_last_order": 12,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 2,
+            "total_amount_30d": "70.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6177716774036836
+        }
+      },
+      "status_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-05",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 2,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 2,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 2,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-05",
+        "input_quality": {
+          "received_total": 2,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 2,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 2,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 2,
+          "ok": 2,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 2,
+                "mean_probability": 0.6123652708010705,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 2
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "model_call": {
+      "requests": {
+        "r-m1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 2,
+            "total_amount_90d": "45.000000",
+            "average_order_amount_90d": "22.50",
+            "days_since_last_order": 12,
+            "distinct_stock_codes_90d": 2,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 2,
+            "total_amount_30d": "45.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.5018873517705361
+        },
+        "r-m2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "15.000000",
+            "average_order_amount_90d": "15.00",
+            "days_since_last_order": 7,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "15.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6558655847800694
+        }
+      },
+      "status_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 3,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 3,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 2,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 3,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 3,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 3,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 2,
+            "bins": [
+              0.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 2,
+            "bins": [
+              0.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 2,
+          "ok": 2,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 2,
+                "mean_probability": 0.5788764682753027,
+                "histogram": [
+                  0,
+                  0,
+                  1,
+                  1,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 2
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "model_unavailable": {
+      "requests": {
+        "r-u2": {
+          "status": "no_history",
+          "features": null,
+          "model_name": null,
+          "model_version": null,
+          "probability": null
+        },
+        "r-u1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.5972182463057413
+        }
+      },
+      "status_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 2,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 2,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 2,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 2,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 2,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 2,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 2,
+          "ok": 1,
+          "no_history": 1,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.5972182463057413,
+                "histogram": [
+                  0,
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "order": {
+      "requests": {
+        "r-o1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 3,
+            "total_amount_90d": "52.000000",
+            "average_order_amount_90d": "17.33",
+            "days_since_last_order": 11,
+            "distinct_stock_codes_90d": 4,
+            "return_rate_90d": "0.250000",
+            "order_count_30d": 3,
+            "total_amount_30d": "52.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.15505178203210673
+        },
+        "r-o2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 3,
+            "total_amount_90d": "52.000000",
+            "average_order_amount_90d": "17.33",
+            "days_since_last_order": 11,
+            "distinct_stock_codes_90d": 4,
+            "return_rate_90d": "0.250000",
+            "order_count_30d": 3,
+            "total_amount_30d": "52.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.15505178203210673
+        }
+      },
+      "status_final": {
+        "now": "2011-02-05",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 5,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 5,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 1,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-05",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 5,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 5,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 1,
+          "since_last_advance": {
+            "received": 5,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 1,
+          "ok": 1,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.15505178203210673,
+                "histogram": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "predict": {
+      "requests": {
+        "r-p1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.5972182463057413
+        },
+        "r-p2": {
+          "status": "no_history",
+          "features": null,
+          "model_name": null,
+          "model_version": null,
+          "probability": null
+        }
+      },
+      "status_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 1,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 1,
+        "requests_invalid": 2,
+        "requests_conflict": 1,
+        "predictions_written": 2,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 1,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 1,
+          "requests_invalid": 2,
+          "requests_conflict": 1,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 1,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 2,
+          "ok": 1,
+          "no_history": 1,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.5972182463057413,
+                "histogram": [
+                  0,
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "recovery": {
+      "requests": {
+        "r-rec1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.668519404214501
+        },
+        "r-rec2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "20.000000",
+            "average_order_amount_90d": "20.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "20.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.6774669448794686
+        },
+        "r-rec3": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.668519404214501
+        },
+        "r-rec4": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 2,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.668519404214501
+        }
+      },
+      "status_final": {
+        "now": "2011-01-12",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 1,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 1,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 1,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-01-12",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 1,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 1,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 1,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 1,
+          "ok": 1,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.668519404214501,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 1
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    },
+    "switch": {
+      "requests": {
+        "r-s1": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.5972182463057413
+        },
+        "r-s2": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-logistic",
+          "model_version": "1",
+          "probability": 0.5972182463057413
+        },
+        "r-s3": {
+          "status": "ok",
+          "features": {
+            "order_count_90d": 1,
+            "total_amount_90d": "10.000000",
+            "average_order_amount_90d": "10.00",
+            "days_since_last_order": 22,
+            "distinct_stock_codes_90d": 1,
+            "return_rate_90d": "0.000000",
+            "order_count_30d": 1,
+            "total_amount_30d": "10.000000"
+          },
+          "model_name": "hw4-boosting",
+          "model_version": "1",
+          "probability": 0.9989542269364132
+        }
+      },
+      "status_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "events_pending": 0,
+        "requests_pending": 0,
+        "received_total": 1,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 0,
+        "unattributed": 0,
+        "attributed_new": 1,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "predictions_written": 3,
+        "last_event_id": "SIM",
+        "last_request_id": "SIM"
+      },
+      "report_final": {
+        "now": "2011-02-01",
+        "closed_until": "2011-01-01",
+        "input_quality": {
+          "received_total": 1,
+          "invalid_events": 0,
+          "conflicts": 0,
+          "closed_past_rejected": 0,
+          "duplicates": 0,
+          "unattributed": 0,
+          "attributed_new": 1,
+          "requests_invalid": 0,
+          "requests_conflict": 0,
+          "non_purchase_rows": 0,
+          "cancellations": 0,
+          "since_last_advance": {
+            "received": 1,
+            "invalid_events": 0
+          }
+        },
+        "drift": {
+          "status": "insufficient_data",
+          "statistic": 0.0,
+          "threshold": 0.2,
+          "min_observations": 200,
+          "reference": {
+            "from": "2010-12-01",
+            "until": "2011-03-01",
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frozen": false
+          },
+          "current": {
+            "n": 1,
+            "bins": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "predictions": {
+          "total": 3,
+          "ok": 3,
+          "no_history": 0,
+          "by_version": {
+            "hw4-logistic": {
+              "1": {
+                "count": 2,
+                "mean_probability": 0.5972182463057413,
+                "histogram": [
+                  0,
+                  0,
+                  2,
+                  0,
+                  0
+                ]
+              }
+            },
+            "hw4-boosting": {
+              "1": {
+                "count": 1,
+                "mean_probability": 0.9989542269364132,
+                "histogram": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            }
+          }
+        },
+        "stream_health": {
+          "events_pending": 0,
+          "requests_pending": 0,
+          "oldest_pending_idle_seconds": 0
+        },
+        "labels": {
+          "matured": 0,
+          "immature": 3
+        },
+        "quality": {
+          "by_version": {}
+        }
+      }
+    }
+  },
+  "check_toy": {
+    "requests": {
+      "r-chk-1": {
+        "status": "ok",
+        "features": {
+          "order_count_90d": 1,
+          "total_amount_90d": "20.000000",
+          "average_order_amount_90d": "20.00",
+          "days_since_last_order": 22,
+          "distinct_stock_codes_90d": 1,
+          "return_rate_90d": "0.000000",
+          "order_count_30d": 1,
+          "total_amount_30d": "20.000000"
+        },
+        "model_name": "hw4-logistic",
+        "model_version": "1",
+        "probability": 0.6069588641984575
+      },
+      "r-chk-2": {
+        "status": "no_history",
+        "features": null,
+        "model_name": null,
+        "model_version": null,
+        "probability": null
+      }
+    },
+    "status_final": {
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01",
+      "events_pending": 0,
+      "requests_pending": 0,
+      "received_total": 2,
+      "invalid_events": 0,
+      "conflicts": 0,
+      "closed_past_rejected": 0,
+      "duplicates": 1,
+      "unattributed": 0,
+      "attributed_new": 1,
+      "requests_invalid": 0,
+      "requests_conflict": 0,
+      "predictions_written": 2,
+      "last_event_id": "SIM",
+      "last_request_id": "SIM"
+    },
+    "report_final": {
+      "now": "2011-02-01",
+      "closed_until": "2011-01-01",
+      "input_quality": {
+        "received_total": 2,
+        "invalid_events": 0,
+        "conflicts": 0,
+        "closed_past_rejected": 0,
+        "duplicates": 1,
+        "unattributed": 0,
+        "attributed_new": 1,
+        "requests_invalid": 0,
+        "requests_conflict": 0,
+        "non_purchase_rows": 0,
+        "cancellations": 0,
+        "since_last_advance": {
+          "received": 2,
+          "invalid_events": 0
+        }
+      },
+      "drift": {
+        "status": "insufficient_data",
+        "statistic": 0.0,
+        "threshold": 0.2,
+        "min_observations": 200,
+        "reference": {
+          "from": "2010-12-01",
+          "until": "2011-03-01",
+          "n": 1,
+          "bins": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "frozen": false
+        },
+        "current": {
+          "n": 1,
+          "bins": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "predictions": {
+        "total": 2,
+        "ok": 1,
+        "no_history": 1,
+        "by_version": {
+          "hw4-logistic": {
+            "1": {
+              "count": 1,
+              "mean_probability": 0.6069588641984575,
+              "histogram": [
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          }
+        }
+      },
+      "stream_health": {
+        "events_pending": 0,
+        "requests_pending": 0,
+        "oldest_pending_idle_seconds": 0
+      },
+      "labels": {
+        "matured": 0,
+        "immature": 1
+      },
+      "quality": {
+        "by_version": {}
+      }
+    }
+  }
+}
